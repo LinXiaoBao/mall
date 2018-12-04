@@ -1,5 +1,6 @@
 <template>
   <div>
-    <p class="ss">sss</p>
+    <img src="~@/assets/logo.png">
+    <p class="ss">sdfkjsdkls</p>
   </div>
 </template>
