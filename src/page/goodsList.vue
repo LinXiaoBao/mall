@@ -8,27 +8,20 @@
       <div class="container">
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
-          <a href="javascript:void(0)" class="default cur">Default</a>
-          <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-          <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+          <a class="default cur">Default</a>
+          <a class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+          <a class="filterby stopPop" @click="showFilterPop">Filter by</a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter stopPop" id="filter">
+          <div class="filter stopPop" id="filter" :class="{'filterby-show': filterBy}">
             <dl class="filter-price">
               <dt>Price:</dt>
-              <dd><a href="javascript:void(0)">All</a></dd>
               <dd>
-                <a href="javascript:void(0)">0 - 100</a>
+                <a :class="{'cur': priceChecked === 'all'}" @click="priceChecked = 'all'">All</a>
               </dd>
-              <dd>
-                <a href="javascript:void(0)">100 - 500</a>
-              </dd>
-              <dd>
-                <a href="javascript:void(0)">500 - 1000</a>
-              </dd>
-              <dd>
-                <a href="javascript:void(0)">1000 - 2000</a>
+              <dd v-for="(item, key) in priceFilter" :key="key" @click="setPriceFilrer(key)">
+                <a :class="{'cur': priceChecked === key}">{{item.startPrice}} - {{item.endPrice}}</a>
               </dd>
             </dl>
           </div>
@@ -45,7 +38,7 @@
                     <div class="name">{{item.productName}}</div>
                     <div class="price">{{item.prodcutPrice}}</div>
                     <div class="btn-area">
-                      <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      <a class="btn btn--m">加入购物车</a>
                     </div>
                   </div>
                 </li>
@@ -55,6 +48,7 @@
         </div>
       </div>
     </div>
+    <div class="md-overlay" v-show="overLayFlay" @click="closePop"></div>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -67,7 +61,24 @@
   export default{
     data(){
       return {
-        goodsList: []
+        goodsList: [],
+        priceFilter: [
+          {
+            startPrice: '0.00',
+            endPrice: '500.00'
+          },
+          {
+            startPrice: '500.00',
+            endPrice: '1000.00'
+          },
+          {
+            startPrice: '1000.00',
+            endPrice: '1500.00'
+          }
+        ],
+        priceChecked: 'all',
+        filterBy: false,
+        overLayFlay: false
       }
     },
     components: {
@@ -83,6 +94,18 @@
         axios.get('/api/goodsData').then((res) => {
           this.goodsList = res.data.result
         })
+      },
+      showFilterPop () {
+        this.filterBy = true
+        this.overLayFlay = true
+      },
+      closePop () {
+        this.filterBy = false
+        this.overLayFlay = false
+      },
+      setPriceFilrer (index) {
+        this.priceChecked = index
+        this.closePop()
       }
     }
   }
