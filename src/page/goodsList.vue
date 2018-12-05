@@ -98,16 +98,28 @@
   import NavHeader from '@/components/NavHeader.vue'
   import NavBread from '@/components/NavBread.vue'
   import NavFooter from '@/components/NavFooter.vue'
+  import axios from 'axios'
 
   export default{
     data(){
       return {
+        goodsList: []
       }
     },
     components: {
       NavHeader,
       NavBread,
       NavFooter
+    },
+    mounted () {
+      this.getGoodsData()
+    },
+    methods: {
+      getGoodsData () {
+        axios.get('/api/goodsData').then((res) => {
+          this.goodsList = res.data
+        })
+      }
     }
   }
 </script>
